@@ -50,7 +50,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
   ];
 
   final List<String> songNames = [
-    'Electronic',
+    'Puto el que lo lea',
     'Sleep',
     'Contra-Whip',
     'Studio-lum',
