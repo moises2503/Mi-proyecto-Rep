@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Music Player',
+      title: 'HOLA MUNDO',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
       ),
