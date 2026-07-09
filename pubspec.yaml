@@ -1,0 +1,32 @@
+name: flutter_application_rep
+description: A new Flutter project
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  audioplayers: ^5.2.1    
+  video_player: ^2.8.2
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.13.1   
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/music.png"  
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/audio/cancion1.mp3
+    - assets/audio/cancion2.mp3
+    - assets/audio/cancion3.mp3
+    - assets/audio/cancion4.mp3
+    - assets/audio/cancion5.mp3
+    - assets/images/music.png
+    - assets/video/video1.mp4
