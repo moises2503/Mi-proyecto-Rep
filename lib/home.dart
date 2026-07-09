@@ -51,25 +51,148 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, //  Fondo negro
-      body: Center(
-        child: FadeTransition(
-          // 🌫 Aparece/desaparece suavemente
-          opacity: _fadeAnimation,
-          child: RotationTransition(
-            //  Rotación infinita
-            turns: _controller,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.purple.shade900,
+              Colors.black,
+              Colors.purple.shade900,
+            ],
+          ),
+        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //  Logo de música
-                Image.asset(
-                  "assets/images/music.png",
-                  width: 150,
+                ScaleTransition(
+                  scale: Tween<double>(begin: 0.8, end: 1.0)
+                      .animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut)),
+                  child: RotationTransition(
+                    turns: _controller,
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            Colors.purple.shade300,
+                            Colors.purple.shade700,
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.purple.withOpacity(0.8),
+                            blurRadius: 40,
+                            spreadRadius: 15,
+                          ),
+                        ],
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: const DecorationImage(
+                            image: AssetImage("assets/images/music.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 20), //  Espacio entre logo y loader
-                // ⏳ Indicador de carga
-                const CircularProgressIndicator(color: Colors.white),
+                const SizedBox(height: 50),
+                Text(
+                  'Music Player',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    shadows: [
+                      Shadow(
+                        color: Colors.purple.withOpacity(0.8),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 50),
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      RotationTransition(
+                        turns: _controller,
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.purple.shade400,
+                              width: 3,
+                            ),
+                          ),
+                        ),
+                      ),
+                      RotationTransition(
+                        turns: _controller,
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.purple.withOpacity(0.6),
+                                blurRadius: 20,
+                              ),
+                            ],
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Positioned(
+                                top: 0,
+                                child: Container(
+                                  width: 12,
+                                  height: 12,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.purpleAccent,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.purpleAccent.withOpacity(0.8),
+                                        blurRadius: 8,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'Cargando',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

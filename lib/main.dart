@@ -16,7 +16,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Music Player',
       theme: ThemeData(
+        useMaterial3: true,
         scaffoldBackgroundColor: Colors.black,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple,
+          brightness: Brightness.dark,
+        ),
       ),
       home: SplashScreen(),
     );
@@ -163,100 +168,268 @@ class _MusicPlayerPageState extends State<MusicPlayerPage>
         children: [
           if (videoBackground != null) videoBackground!,
           Container(
-            color: Colors.black.withOpacity(0.5),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.purple.withOpacity(0.3),
+                  Colors.black.withOpacity(0.7),
+                ],
+              ),
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // 🎵 Disco giratorio con efecto de sombra
               Center(
-                child: RotationTransition(
-                  turns: _controller,
-                  child: Container(
-                    width: 220,
-                    height: 220,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage(imagePath),
-                        fit: BoxFit.cover,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Anillo exterior con brillo
+                    Container(
+                      width: 260,
+                      height: 260,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            Colors.purple.withOpacity(0.5),
+                            Colors.purple.withOpacity(0.1),
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.purple.withOpacity(0.6),
+                            blurRadius: 30,
+                            spreadRadius: 10,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 100),
-              Text(
-                songNames[currentIndex],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Slider(
-                activeColor: Colors.white,
-                inactiveColor: Colors.grey,
-                thumbColor: Colors.white,
-                min: 0,
-                max: duration.inSeconds.toDouble(),
-                value: position.inSeconds
-                    .toDouble()
-                    .clamp(0, duration.inSeconds.toDouble()),
-                onChanged: (value) async {
-                  final newPosition = Duration(seconds: value.toInt());
-                  await _audioPlayer.seek(newPosition);
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      formatTime(position),
-                      style: const TextStyle(color: Colors.white),
+                    // Disco giratorio
+                    RotationTransition(
+                      turns: _controller,
+                      child: Container(
+                        width: 220,
+                        height: 220,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage(imagePath),
+                            fit: BoxFit.cover,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.8),
+                              blurRadius: 20,
+                              spreadRadius: 5,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    Text(
-                      formatTime(duration),
-                      style: const TextStyle(color: Colors.white),
+                    // Centro brillante
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            Colors.white,
+                            Colors.grey.shade400,
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.4),
+                            blurRadius: 10,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.skip_previous,
-                        size: 40, color: Colors.white),
-                    onPressed: prevMusic,
+              const SizedBox(height: 80),
+              // 🎵 Nombre de la canción
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Text(
+                  songNames[currentIndex],
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
                   ),
-                  const SizedBox(width: 10),
-                  Container(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        isPlaying ? Icons.pause : Icons.play_arrow,
-                        size: 40,
-                        color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 40),
+              // 🎚 Slider mejorado
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    SliderTheme(
+                      data: SliderThemeData(
+                        trackHeight: 8,
+                        activeTrackColor: Colors.purple.shade400,
+                        inactiveTrackColor: Colors.grey.shade800,
+                        thumbColor: Colors.purpleAccent,
+                        thumbShape: const RoundSliderThumbShape(
+                          enabledThumbRadius: 8,
+                          elevation: 5,
+                        ),
+                        overlayColor: Colors.purple.withOpacity(0.3),
+                        overlayShape: const RoundSliderOverlayShape(
+                          overlayRadius: 15,
+                        ),
                       ),
-                      onPressed: () {
-                        isPlaying ? pauseMusic() : playMusic();
-                      },
+                      child: Slider(
+                        min: 0,
+                        max: duration.inSeconds.toDouble(),
+                        value: position.inSeconds
+                            .toDouble()
+                            .clamp(0, duration.inSeconds.toDouble()),
+                        onChanged: (value) async {
+                          final newPosition = Duration(seconds: value.toInt());
+                          await _audioPlayer.seek(newPosition);
+                        },
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  IconButton(
-                    icon: const Icon(Icons.skip_next,
-                        size: 40, color: Colors.white),
-                    onPressed: nextMusic,
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            formatTime(position),
+                            style: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            formatTime(duration),
+                            style: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 50),
+              // 🎮 Controles de reproducción
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Botón anterior
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.purple.shade700,
+                            Colors.purple.shade500,
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.purple.withOpacity(0.5),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.skip_previous_rounded,
+                          size: 32,
+                          color: Colors.white,
+                        ),
+                        onPressed: prevMusic,
+                      ),
+                    ),
+                    // Botón play/pause principal
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.purple.shade300,
+                            Colors.purple.shade600,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.purple.withOpacity(0.8),
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: ScaleTransition(
+                        scale: Tween<double>(begin: 1, end: 1.1)
+                            .animate(_controller),
+                        child: IconButton(
+                          icon: Icon(
+                            isPlaying
+                                ? Icons.pause_rounded
+                                : Icons.play_arrow_rounded,
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            isPlaying ? pauseMusic() : playMusic();
+                          },
+                        ),
+                      ),
+                    ),
+                    // Botón siguiente
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.purple.shade700,
+                            Colors.purple.shade500,
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.purple.withOpacity(0.5),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.skip_next_rounded,
+                          size: 32,
+                          color: Colors.white,
+                        ),
+                        onPressed: nextMusic,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
